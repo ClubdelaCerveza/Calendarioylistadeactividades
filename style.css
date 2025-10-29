@@ -1,0 +1,75 @@
+body {
+  font-family: Arial, sans-serif;
+  background: #f4f6f8;
+  margin: 0;
+  padding: 0;
+}
+
+header {
+  display: flex;
+  justify-content: space-between;
+  background: #1976d2;
+  color: white;
+  padding: 15px 30px;
+  align-items: center;
+}
+
+.login-container {
+  max-width: 400px;
+  margin: 80px auto;
+  padding: 30px;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 0 8px rgba(0,0,0,0.1);
+  text-align: center;
+}
+
+input, button {
+  width: 90%;
+  margin: 10px auto;
+  padding: 10px;
+  font-size: 1em;
+}
+
+button {
+  background-color: #1976d2;
+  color: white;
+  border: none;
+  cursor: pointer;
+}
+
+main {
+  display: flex;
+  justify-content: space-around;
+  padding: 20px;
+}
+
+.activity-section, .calendar-section {
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  width: 45%;
+}
+
+#calendar {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 5px;
+}
+
+.day {
+  border: 1px solid #ccc;
+  padding: 8px;
+  min-height: 60px;
+  position: relative;
+}
+
+.day .activity {
+  background: #1976d2;
+  color: white;
+  padding: 2px 4px;
+  border-radius: 4px;
+  font-size: 0.8em;
+  margin-top: 4px;
+  display: block;
+}

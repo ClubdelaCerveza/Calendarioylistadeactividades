@@ -60,7 +60,6 @@ function showMain() {
     drawCalendar();
 }
 
-// Auto-login si ya hay usuario
 window.onload = function() {
     if(localStorage.getItem('currentUser')) {
         showMain();
@@ -68,15 +67,29 @@ window.onload = function() {
 }
 
 // --------------------
-// Actividades
+// Actividades con fecha
 // --------------------
 function addActivity() {
     const activityInput = document.getElementById('new-activity');
-    const activity = activityInput.value.trim();
-    if(!activity) return;
+    const activityName = activityInput.value.trim();
+    if(!activityName) return;
+
+    // Pedir fecha
+    const dateStr = prompt("Ingrese fecha de la actividad (YYYY-MM-DD):");
+    if(!dateStr) return;
+    const date = new Date(dateStr);
+    if(isNaN(date)) {
+        alert("Fecha inválida");
+        return;
+    }
 
     let activities = JSON.parse(localStorage.getItem('activities_' + localStorage.getItem('currentUser'))) || [];
-    activities.push({activity: activity, day: null, month: null, year: null});
+    activities.push({
+        activity: activityName,
+        day: date.getDate(),
+        month: date.getMonth(),
+        year: date.getFullYear()
+    });
     localStorage.setItem('activities_' + localStorage.getItem('currentUser'), JSON.stringify(activities));
 
     activityInput.value = "";
@@ -90,7 +103,9 @@ function loadActivities() {
     let activities = JSON.parse(localStorage.getItem('activities_' + localStorage.getItem('currentUser'))) || [];
     activities.forEach((a, index) => {
         const li = document.createElement('li');
-        li.innerHTML = `${a.activity} <button onclick="deleteActivity(${index})">Borrar</button>`;
+        li.innerHTML = `${a.activity} (${a.year}-${a.month+1}-${a.day}) 
+                        <button onclick="editActivityDate(${index})">Editar Fecha</button>
+                        <button onclick="deleteActivity(${index})">Borrar</button>`;
         list.appendChild(li);
     });
 }
@@ -98,6 +113,24 @@ function loadActivities() {
 function deleteActivity(index) {
     let activities = JSON.parse(localStorage.getItem('activities_' + localStorage.getItem('currentUser'))) || [];
     activities.splice(index, 1);
+    localStorage.setItem('activities_' + localStorage.getItem('currentUser'), JSON.stringify(activities));
+    loadActivities();
+    drawCalendar();
+}
+
+function editActivityDate(index) {
+    let activities = JSON.parse(localStorage.getItem('activities_' + localStorage.getItem('currentUser'))) || [];
+    const a = activities[index];
+    const dateStr = prompt("Editar fecha de la actividad (YYYY-MM-DD):", `${a.year}-${a.month+1}-${a.day}`);
+    if(!dateStr) return;
+    const date = new Date(dateStr);
+    if(isNaN(date)) {
+        alert("Fecha inválida");
+        return;
+    }
+    a.day = date.getDate();
+    a.month = date.getMonth();
+    a.year = date.getFullYear();
     localStorage.setItem('activities_' + localStorage.getItem('currentUser'), JSON.stringify(activities));
     loadActivities();
     drawCalendar();
@@ -145,7 +178,7 @@ function drawCalendar() {
         dayDiv.innerHTML = `<strong>${day}</strong>`;
         cell.appendChild(dayDiv);
 
-        // Mostrar actividades asignadas a este día
+        // Mostrar actividades del día
         activities.forEach((a) => {
             if(a.day === day && a.month === month && a.year === year) {
                 const actDiv = document.createElement('div');
@@ -154,19 +187,5 @@ function drawCalendar() {
                 cell.appendChild(actDiv);
             }
         });
-
-        // Permitir asignar actividad al día haciendo click
-        cell.onclick = () => {
-            const index = prompt("Ingrese el índice de la actividad del listado para asignarla al día (0 para la primera):");
-            const i = parseInt(index);
-            if(isNaN(i)) return;
-            if(i >= 0 && i < activities.length) {
-                activities[i].day = day;
-                activities[i].month = month;
-                activities[i].year = year;
-                localStorage.setItem('activities_' + localStorage.getItem('currentUser'), JSON.stringify(activities));
-                drawCalendar();
-            }
-        };
     }
 }

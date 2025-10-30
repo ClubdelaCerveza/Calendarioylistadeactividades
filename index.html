@@ -1,20 +1,53 @@
-<!-- ACTIVIDADES -->
-<section id="activities">
-  <h3>📅 Actividades del Grupo</h3>
-  <form id="activity-form" class="activity-form">
-    <input type="text" id="activity-name" placeholder="Nombre de la actividad" required>
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>El Club de la Cerveza</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Login / Registro -->
+    <div id="login-container">
+        <h1>El Club de la Cerveza</h1>
+        <div id="register-login">
+            <input type="text" id="username" placeholder="Usuario">
+            <input type="password" id="password" placeholder="Contraseña">
+            <button onclick="register()">Crear Usuario</button>
+            <button onclick="login()">Entrar</button>
+        </div>
+        <p id="login-message"></p>
+    </div>
 
-    <select id="activity-groups" multiple required>
-      <option value="Tardeo&Bailoteo">Tardeo & Bailoteo</option>
-      <option value="Exploradores del Paladar">Exploradores del Paladar</option>
-      <option value="Rutas/Senderismo">Rutas/Senderismo</option>
-      <option value="Culturópatas ilustrados">Culturópatas ilustrados</option>
-      <option value="Planeta fit">Planeta fit</option>
-      <option value="Tranquileo Inquieto Divertido">Tranquileo Inquieto Divertido</option>
-    </select>
+    <!-- Contenido principal -->
+    <div id="main-container" style="display:none;">
+        <h2>Bienvenido, <span id="user-display"></span></h2>
 
-    <input type="date" id="activity-date" required>
-    <button type="submit">Agregar</button>
-  </form>
-  <ul id="activity-list" class="activity-list"></ul>
-</section>
+        <!-- Listado de actividades -->
+        <div id="activities-section">
+            <h3>Listado de Actividades</h3>
+            <input type="text" id="new-activity" placeholder="Nueva actividad">
+            <button onclick="addActivity()">Agregar</button>
+            <ul id="activity-list"></ul>
+        </div>
+
+        <!-- Calendario -->
+        <div id="calendar-section">
+            <h3>Calendario</h3>
+            <label for="month-select">Mes:</label>
+            <select id="month-select" onchange="drawCalendar()">
+                <option value="0">Enero</option>
+                <option value="1">Febrero</option>
+                <option value="2">Marzo</option>
+                <option value="3">Abril</option>
+                <option value="4">Mayo</option>
+                <option value="5">Junio</option>
+                <option value="6">Julio</option>
+                <option value="7">Agosto</option>
+                <option value="8">Septiembre</option>
+                <option value="9">Octubre</option>
+                <option value="10">Noviembre</option>
+                <option value="11">Diciembre</option>
+            </select>
+
+            <label for="year-select">Año:</label>
+            <select id="year-select" onchan

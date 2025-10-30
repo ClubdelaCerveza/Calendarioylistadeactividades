@@ -1,79 +1,159 @@
-const activityForm = document.getElementById("activity-form");
-const activityList = document.getElementById("activity-list");
-const monthSelect = document.getElementById("month-select");
-const yearSelect = document.getElementById("year-select");
-const calendarGrid = document.getElementById("calendar-grid");
+// Gestión de usuarios
+function register() {
+    const username = document.getElementById('username').value;
+    const password = document.getElementById('password').value;
 
-let activities = [];
+    if(!username || !password) {
+        document.getElementById('login-message').innerText = "Ingrese usuario y contraseña";
+        return;
+    }
 
-// Inicializar meses y años
-const months = ["Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre"];
-for(let i=0;i<months.length;i++) monthSelect.innerHTML += `<option value="${i}">${months[i]}</option>`;
-for(let y=2025; y<=2030; y++) yearSelect.innerHTML += `<option value="${y}">${y}</option>`;
+    let users = JSON.parse(localStorage.getItem('users')) || {};
+    if(users[username]) {
+        document.getElementById('login-message').innerText = "Usuario ya existe";
+        return;
+    }
 
-// Función para agregar actividad
-activityForm.addEventListener("submit", (e) => {
-  e.preventDefault();
-  const name = document.getElementById("activity-name").value;
-  const date = document.getElementById("activity-date").value;
-  const groups = Array.from(document.getElementById("activity-groups").selectedOptions).map(opt => opt.value);
-
-  if(name && date && groups.length){
-    const activity = { name, date, groups };
-    activities.push(activity);
-    renderActivities();
-    renderCalendar();
-    activityForm.reset();
-  }
-});
-
-// Renderizado de actividades
-function renderActivities(){
-  activityList.innerHTML = "";
-  activities.sort((a,b)=> new Date(a.date)-new Date(b.date));
-  activities.forEach(act => {
-    const li = document.createElement("li");
-    li.textContent = `${act.date}: ${act.name} (${act.groups.join(", ")})`;
-    li.dataset.groups = act.groups.join(",");
-    activityList.appendChild(li);
-  });
+    users[username] = password;
+    localStorage.setItem('users', JSON.stringify(users));
+    document.getElementById('login-message').innerText = "Usuario creado. Inicie sesión.";
 }
 
-// Renderizado calendario
-function renderCalendar(){
-  const month = parseInt(monthSelect.value);
-  const year = parseInt(yearSelect.value);
-  const firstDay = new Date(year, month, 1).getDay();
-  const daysInMonth = new Date(year, month+1, 0).getDate();
+function login() {
+    const username = document.getElementById('username').value;
+    const password = document.getElementById('password').value;
 
-  calendarGrid.innerHTML = "";
-  for(let i=0;i<firstDay;i++) calendarGrid.innerHTML += `<div class="day empty"></div>`;
+    let users = JSON.parse(localStorage.getItem('users')) || {};
+    if(users[username] === password) {
+        localStorage.setItem('currentUser', username);
+        showMain();
+    } else {
+        document.getElementById('login-message').innerText = "Usuario o contraseña incorrectos";
+    }
+}
 
-  for(let d=1; d<=daysInMonth; d++){
-    const dayDiv = document.createElement("div");
-    dayDiv.className = "day";
-    dayDiv.innerHTML = `<span>${d}</span>`;
+function logout() {
+    localStorage.removeItem('currentUser');
+    document.getElementById('main-container').style.display = "none";
+    document.getElementById('login-container').style.display = "block";
+}
 
-    const currentDate = `${year}-${String(month+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
-    activities.filter(a => a.date===currentDate).forEach(act => {
-      act.groups.forEach(group => {
-        const ev = document.createElement("div");
-        ev.className = "event";
-        ev.dataset.group = group;
-        ev.textContent = act.name;
-        dayDiv.appendChild(ev);
-      });
+// Mostrar interfaz principal
+function showMain() {
+    const user = localStorage.getItem('currentUser');
+    if(!user) return;
+
+    document.getElementById('login-container').style.display = "none";
+    document.getElementById('main-container').style.display = "block";
+    document.getElementById('user-display').innerText = user;
+
+    loadActivities();
+    setCurrentMonthYear();
+    drawCalendar();
+}
+
+// Establecer mes y año actuales al cargar
+function setCurrentMonthYear() {
+    const now = new Date();
+    document.getElementById('month-select').value = now.getMonth();
+    document.getElementById('year-select').value = now.getFullYear();
+}
+
+// Gestión de actividades
+function addActivity() {
+    const activityInput = document.getElementById('new-activity');
+    const activity = activityInput.value.trim();
+    if(!activity) return;
+
+    let activities = JSON.parse(localStorage.getItem('activities_' + localStorage.getItem('currentUser'))) || [];
+    activities.push({activity: activity, day: null, month: null, year: null});
+    localStorage.setItem('activities_' + localStorage.getItem('currentUser'), JSON.stringify(activities));
+    activityInput.value = "";
+    loadActivities();
+    drawCalendar();
+}
+
+function loadActivities() {
+    const list = document.getElementById('activity-list');
+    list.innerHTML = "";
+    let activities = JSON.parse(localStorage.getItem('activities_' + localStorage.getItem('currentUser'))) || [];
+    activities.forEach((a, index) => {
+        const li = document.createElement('li');
+        li.innerHTML = `${a.activity} <button onclick="deleteActivity(${index})">Borrar</button>`;
+        list.appendChild(li);
+    });
+}
+
+function deleteActivity(index) {
+    let activities = JSON.parse(localStorage.getItem('activities_' + localStorage.getItem('currentUser'))) || [];
+    activities.splice(index, 1);
+    localStorage.setItem('activities_' + localStorage.getItem('currentUser'), JSON.stringify(activities));
+    loadActivities();
+    drawCalendar();
+}
+
+// Calendario mejorado
+function drawCalendar() {
+    const month = parseInt(document.getElementById('month-select').value);
+    const year = parseInt(document.getElementById('year-select').value);
+    const table = document.getElementById('calendar-table');
+    table.innerHTML = "";
+
+    const firstDay = new Date(year, month, 1).getDay();
+    const daysInMonth = new Date(year, month + 1, 0).getDate();
+
+    // Encabezado
+    let header = table.insertRow();
+    ['Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb'].forEach(d => {
+        let cell = header.insertCell();
+        cell.innerText = d;
+        cell.style.fontWeight = "bold";
+        cell.style.backgroundColor = "#f0f0f0";
     });
 
-    calendarGrid.appendChild(dayDiv);
-  }
+    let row = table.insertRow();
+    for(let i=0; i<firstDay; i++) row.insertCell();
+
+    let activities = JSON.parse(localStorage.getItem('activities_' + localStorage.getItem('currentUser'))) || [];
+
+    for(let day=1; day<=daysInMonth; day++) {
+        if(row.cells.length === 7) row = table.insertRow();
+        let cell = row.insertCell();
+        cell.style.verticalAlign = "top";
+        cell.style.height = "80px";
+
+        const dayDiv = document.createElement('div');
+        dayDiv.innerHTML = `<strong>${day}</strong>`;
+        cell.appendChild(dayDiv);
+
+        // Mostrar actividades asignadas
+        activities.forEach((a) => {
+            if(a.day === day && a.month === month && a.year === year) {
+                const actDiv = document.createElement('div');
+                actDiv.className = "activity-day";
+                actDiv.innerText = a.activity;
+                cell.appendChild(actDiv);
+            }
+        });
+
+        // Asignar actividad al día al hacer click
+        cell.onclick = function() {
+            if(activities.length === 0) {
+                alert("No hay actividades para asignar.");
+                return;
+            }
+            const actList = activities.map(a => a.activity);
+            const activityName = prompt("Seleccione actividad para este día:\n" + actList.join("\n"));
+            let selected = activities.find(a => a.activity === activityName);
+            if(selected) {
+                selected.day = day;
+                selected.month = month;
+                selected.year = year;
+                localStorage.setItem('activities_' + localStorage.getItem('currentUser'), JSON.stringify(activities));
+                drawCalendar();
+            }
+        }
+    }
 }
 
-// Actualizar calendario al cambiar mes/año
-monthSelect.addEventListener("change", renderCalendar);
-yearSelect.addEventListener("change", renderCalendar);
-
-// Inicializar calendario
-monthSelect.value = new Date().getMonth();
-yearSelect.value = new Date().getFullYear();
-renderCalendar();
+showMain();

@@ -1,16 +1,61 @@
-/* Colores para cada grupo */
-.activity-list li[data-groups*="Tardeo&Bailoteo"] { background: #ff6f61; }
-.activity-list li[data-groups*="Exploradores del Paladar"] { background: #fbcf33; color: #333; }
-.activity-list li[data-groups*="Rutas/Senderismo"] { background: #6dd5ed; }
-.activity-list li[data-groups*="Culturópatas ilustrados"] { background: #a18cd1; }
-.activity-list li[data-groups*="Planeta fit"] { background: #7ed957; }
-.activity-list li[data-groups*="Tranquileo Inquieto Divertido"] { background: #ffb347; }
+body {
+    font-family: Arial, sans-serif;
+    text-align: center;
+    background-color: #f2f2f2;
+    padding: 20px;
+}
 
-/* Colores para eventos en calendario */
-.day .event[data-group="Tardeo&Bailoteo"] { background: #ff6f61; }
-.day .event[data-group="Exploradores del Paladar"] { background: #fbcf33; color: #333; }
-.day .event[data-group="Rutas/Senderismo"] { background: #6dd5ed; }
-.day .event[data-group="Culturópatas ilustrados"] { background: #a18cd1; }
-.day .event[data-group="Planeta fit"] { background: #7ed957; }
-.day .event[data-group="Tranquileo Inquieto Divertido"] { background: #ffb347; }
+#login-container, #main-container {
+    background-color: white;
+    padding: 20px;
+    border-radius: 10px;
+    display: inline-block;
+    min-width: 300px;
+}
 
+input, select {
+    padding: 5px;
+    margin: 5px;
+}
+
+button {
+    padding: 5px 10px;
+    margin: 5px;
+}
+
+ul {
+    list-style: none;
+    padding: 0;
+}
+
+li {
+    margin: 5px 0;
+}
+
+table {
+    margin: 10px auto;
+    border-collapse: collapse;
+}
+
+td, th {
+    border: 1px solid #ccc;
+    width: 100px;
+    height: 80px;
+    text-align: left;
+    vertical-align: top;
+    padding: 2px;
+    cursor: pointer;
+}
+
+th {
+    background-color: #f0f0f0;
+    font-weight: bold;
+}
+
+.activity-day {
+    background-color: #ffcc66;
+    margin: 2px 0;
+    padding: 2px;
+    border-radius: 5px;
+    font-size: 0.8em;
+}

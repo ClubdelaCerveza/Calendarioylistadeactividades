@@ -1,92 +1,113 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>🍺 El Club de la Cerveza 🍺</title>
-  <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>El Club de la Cerveza</title>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;700&family=Roboto&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
 </head>
 <body>
+
   <!-- LOGIN -->
-  <div id="login-container" class="container login-box">
-    <h2>Bienvenido a El Club de la Cerveza</h2>
-    <input type="text" id="username" placeholder="Usuario">
-    <input type="password" id="password" placeholder="Contraseña">
-    <button id="login-btn">Entrar</button>
-    <p id="login-msg"></p>
+  <div id="login-container" class="login-container">
+    <div class="login-box">
+      <h1>🍻 El Club de la Cerveza</h1>
+      <p>¡Organiza planes divertidos con tus amigos!</p>
+      <input type="text" id="username" placeholder="Usuario" />
+      <input type="password" id="password" placeholder="Contraseña" />
+      <button id="login-btn">Entrar / Registrarse</button>
+      <p id="login-msg" class="login-msg"></p>
+    </div>
   </div>
 
-  <!-- CONTENIDO PRINCIPAL -->
-  <div id="main-container" class="container hidden">
+  <!-- AVATAR SELECTION -->
+  <div id="avatar-container" class="hidden login-container">
+    <div class="login-box">
+      <h2>¡Crea tu avatar divertido!</h2>
+      <label>Género:</label>
+      <select id="avatar-gender">
+        <option value="male">Hombre</option>
+        <option value="female">Mujer</option>
+      </select>
+      <label>Vestimenta:</label>
+      <select id="avatar-outfit">
+        <option value="casual">Casual</option>
+        <option value="fiestero">Fiestero</option>
+        <option value="deportivo">Deportivo</option>
+        <option value="formal">Formal</option>
+      </select>
+      <button id="avatar-save">Guardar Avatar</button>
+    </div>
+  </div>
+
+  <!-- MAIN -->
+  <div id="main-container" class="hidden main-container">
+
     <header>
-      <h1>🍺 El Club de la Cerveza 🍺</h1>
-      <div class="contador">
-        Próximos eventos: <span id="total-eventos">0</span>
-      </div>
-      <button id="logout-btn">Cerrar Sesión</button>
+      <h2>¡Bienvenido al Club! 🎉</h2>
+      <button id="logout-btn" class="logout-btn">Cerrar sesión</button>
     </header>
 
-    <!-- GALERÍA PRINCIPAL -->
-    <section id="galeria">
-      <h2>Explora el Mundo del Club 🍻</h2>
-      <div class="galeria-grid">
-        <div class="gal-item">
-          <img src="https://images.unsplash.com/photo-1565958011705-44e21172b1d3" alt="Comidas del mundo">
-          <div class="overlay">Comidas del Mundo</div>
+    <!-- USUARIOS CONECTADOS -->
+    <section id="users">
+      <h3>Usuarios Registrados</h3>
+      <ul id="user-list" class="user-list"></ul>
+    </section>
+
+    <!-- GALERÍA DE PLANES -->
+    <section id="gallery">
+      <h3>Planes y Diversión</h3>
+      <div class="image-grid">
+        <div class="card">
+          <img src="https://images.unsplash.com/photo-1501594907352-04cda38ebc29" alt="Cerveza">
+          <div class="card-text">Cerveza Artesanal</div>
         </div>
-        <div class="gal-item">
-          <img src="https://images.unsplash.com/photo-1501594907352-04cda38ebc29" alt="Cervezas artesanales">
-          <div class="overlay">Cervezas Artesanales</div>
+        <div class="card">
+          <img src="https://images.unsplash.com/photo-1603052875396-0287a9f0b9c9" alt="Comida">
+          <div class="card-text">Tapas y Comida</div>
         </div>
-        <div class="gal-item">
-          <img src="https://images.unsplash.com/photo-1500530855697-b586d89ba3ee" alt="Rutas cerveceras">
-          <div class="overlay">Rutas Cerveceras</div>
+        <div class="card">
+          <img src="https://images.unsplash.com/photo-1527169402691-a3b7c8eae5f8" alt="Ruta">
+          <div class="card-text">Rutas Cerveceras</div>
         </div>
-        <div class="gal-item">
-          <img src="https://images.unsplash.com/photo-1506744038136-46273834b3fb" alt="Planes divertidos">
-          <div class="overlay">Planes Divertidos</div>
+        <div class="card">
+          <img src="https://images.unsplash.com/photo-1595273670756-6b1a7b8aeb93" alt="Amigos">
+          <div class="card-text">Planes con Amigos</div>
         </div>
       </div>
     </section>
 
     <!-- ACTIVIDADES -->
-    <section id="actividades">
-      <h2>Listado de Actividades</h2>
-      <div class="add-actividad">
-        <input type="text" id="nueva-actividad" placeholder="Nueva actividad...">
-        <button id="agregar-actividad">Agregar</button>
-      </div>
-      <input type="text" id="buscar-actividad" placeholder="Buscar actividad...">
-      <ul id="lista-actividades"></ul>
+    <section id="activities">
+      <h3>📅 Actividades del Grupo</h3>
+      <form id="activity-form" class="activity-form">
+        <input type="text" id="activity-name" placeholder="Nombre de la actividad" required>
+        <select id="activity-groups" multiple required>
+          <option value="Tardeo&Bailoteo">Tardeo & Bailoteo</option>
+          <option value="Exploradores del Paladar">Exploradores del Paladar</option>
+          <option value="Rutas/Senderismo">Rutas/Senderismo</option>
+          <option value="Culturópatas ilustrados">Culturópatas ilustrados</option>
+          <option value="Planeta fit">Planeta fit</option>
+          <option value="Tranquileo Inquieto Divertido">Tranquileo Inquieto Divertido</option>
+        </select>
+        <input type="date" id="activity-date" required>
+        <button type="submit">Agregar</button>
+      </form>
+      <ul id="activity-list" class="activity-list"></ul>
     </section>
 
     <!-- CALENDARIO -->
-    <section id="calendario">
-      <h2>Calendario de Eventos</h2>
-      <div class="controles-cal">
-        <label for="mes">Mes:</label>
-        <select id="mes"></select>
-        <label for="anio">Año:</label>
-        <select id="anio"></select>
+    <section id="calendar">
+      <h3>Calendario de Actividades</h3>
+      <div class="calendar-controls">
+        <select id="month-select"></select>
+        <select id="year-select"></select>
       </div>
-      <div id="dias"></div>
+      <div id="calendar-grid" class="calendar-grid"></div>
     </section>
-  </div>
 
-  <!-- MODAL EVENTOS -->
-  <div id="modal" class="hidden">
-    <div class="modal-content">
-      <h3 id="modal-titulo"></h3>
-      <div id="eventos-dia"></div>
-      <input type="text" id="nuevo-evento" placeholder="Nuevo evento...">
-      <button id="guardar-evento">Guardar</button>
-      <button id="cerrar-modal">Cerrar</button>
-    </div>
   </div>
-
-  <footer>
-    <p>© 2025 El Club de la Cerveza 🍺 | Hecho con pasión por la buena birra</p>
-  </footer>
 
   <script src="script.js"></script>
 </body>

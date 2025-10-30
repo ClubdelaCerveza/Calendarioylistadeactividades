@@ -3,113 +3,91 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Gestión de Actividades</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      background-color: #eef2f3;
-      margin: 0;
-      padding: 0;
-    }
-
-    header {
-      background-color: #005f73;
-      color: white;
-      text-align: center;
-      padding: 15px;
-    }
-
-    .container {
-      max-width: 700px;
-      margin: 40px auto;
-      background: white;
-      padding: 25px;
-      border-radius: 8px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.2);
-    }
-
-    input {
-      width: 100%;
-      padding: 10px;
-      margin: 8px 0;
-      border: 1px solid #ccc;
-      border-radius: 4px;
-    }
-
-    button {
-      background-color: #0a9396;
-      color: white;
-      border: none;
-      padding: 10px 20px;
-      border-radius: 5px;
-      cursor: pointer;
-      margin-top: 10px;
-    }
-
-    button:hover {
-      background-color: #007f83;
-    }
-
-    h2, h3 {
-      color: #005f73;
-    }
-
-    ul {
-      list-style: none;
-      padding: 0;
-    }
-
-    li {
-      background-color: #f8f9fa;
-      border: 1px solid #ddd;
-      margin: 5px 0;
-      padding: 10px;
-      border-radius: 4px;
-    }
-
-    .logout {
-      float: right;
-      background-color: #d00000;
-    }
-
-    table {
-      border-collapse: collapse;
-      width: 100%;
-      margin-top: 10px;
-    }
-
-    th, td {
-      border: 1px solid #ccc;
-      text-align: center;
-      padding: 6px;
-    }
-
-    th {
-      background-color: #0a9396;
-      color: white;
-    }
-
-    .activity-day {
-      background-color: #ee9b00;
-      color: white;
-      border-radius: 50%;
-      padding: 5px;
-    }
-
-    #registerDiv, #loginDiv, #mainDiv {
-      display: none;
-    }
-
-  </style>
+  <title>🍺 El Club de la Cerveza 🍺</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
+  <!-- LOGIN -->
+  <div id="login-container" class="container login-box">
+    <h2>Bienvenido a El Club de la Cerveza</h2>
+    <input type="text" id="username" placeholder="Usuario">
+    <input type="password" id="password" placeholder="Contraseña">
+    <button id="login-btn">Entrar</button>
+    <p id="login-msg"></p>
+  </div>
 
-  <header>
-    <h1>Gestión de Actividades</h1>
-  </header>
+  <!-- CONTENIDO PRINCIPAL -->
+  <div id="main-container" class="container hidden">
+    <header>
+      <h1>🍺 El Club de la Cerveza 🍺</h1>
+      <div class="contador">
+        Próximos eventos: <span id="total-eventos">0</span>
+      </div>
+      <button id="logout-btn">Cerrar Sesión</button>
+    </header>
 
-  <!-- Registro -->
-  <div class="container" id="registerDiv">
-    <h2>Crear cuenta</h2>
-    <input type="text" id="newUser" placeholder="Usuario nuevo">
-    <input type="password" id="newPass" placehold
+    <!-- GALERÍA PRINCIPAL -->
+    <section id="galeria">
+      <h2>Explora el Mundo del Club 🍻</h2>
+      <div class="galeria-grid">
+        <div class="gal-item">
+          <img src="https://images.unsplash.com/photo-1565958011705-44e21172b1d3" alt="Comidas del mundo">
+          <div class="overlay">Comidas del Mundo</div>
+        </div>
+        <div class="gal-item">
+          <img src="https://images.unsplash.com/photo-1501594907352-04cda38ebc29" alt="Cervezas artesanales">
+          <div class="overlay">Cervezas Artesanales</div>
+        </div>
+        <div class="gal-item">
+          <img src="https://images.unsplash.com/photo-1500530855697-b586d89ba3ee" alt="Rutas cerveceras">
+          <div class="overlay">Rutas Cerveceras</div>
+        </div>
+        <div class="gal-item">
+          <img src="https://images.unsplash.com/photo-1506744038136-46273834b3fb" alt="Planes divertidos">
+          <div class="overlay">Planes Divertidos</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ACTIVIDADES -->
+    <section id="actividades">
+      <h2>Listado de Actividades</h2>
+      <div class="add-actividad">
+        <input type="text" id="nueva-actividad" placeholder="Nueva actividad...">
+        <button id="agregar-actividad">Agregar</button>
+      </div>
+      <input type="text" id="buscar-actividad" placeholder="Buscar actividad...">
+      <ul id="lista-actividades"></ul>
+    </section>
+
+    <!-- CALENDARIO -->
+    <section id="calendario">
+      <h2>Calendario de Eventos</h2>
+      <div class="controles-cal">
+        <label for="mes">Mes:</label>
+        <select id="mes"></select>
+        <label for="anio">Año:</label>
+        <select id="anio"></select>
+      </div>
+      <div id="dias"></div>
+    </section>
+  </div>
+
+  <!-- MODAL EVENTOS -->
+  <div id="modal" class="hidden">
+    <div class="modal-content">
+      <h3 id="modal-titulo"></h3>
+      <div id="eventos-dia"></div>
+      <input type="text" id="nuevo-evento" placeholder="Nuevo evento...">
+      <button id="guardar-evento">Guardar</button>
+      <button id="cerrar-modal">Cerrar</button>
+    </div>
+  </div>
+
+  <footer>
+    <p>© 2025 El Club de la Cerveza 🍺 | Hecho con pasión por la buena birra</p>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>

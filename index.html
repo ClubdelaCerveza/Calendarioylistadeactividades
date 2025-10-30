@@ -9,13 +9,13 @@
     <!-- Login / Registro -->
     <div id="login-container">
         <h1>El Club de la Cerveza</h1>
-        <div id="register-login">
-            <input type="text" id="username" placeholder="Usuario">
-            <input type="password" id="password" placeholder="Contraseña">
+        <input type="text" id="username" placeholder="Usuario">
+        <input type="password" id="password" placeholder="Contraseña">
+        <div>
             <button onclick="register()">Crear Usuario</button>
             <button onclick="login()">Entrar</button>
         </div>
-        <p id="login-message"></p>
+        <p id="login-message" style="color:red;"></p>
     </div>
 
     <!-- Contenido principal -->
@@ -50,4 +50,21 @@
             </select>
 
             <label for="year-select">Año:</label>
-            <select id="year-select" onchan
+            <select id="year-select" onchange="drawCalendar()">
+                <option>2025</option>
+                <option>2026</option>
+                <option>2027</option>
+                <option>2028</option>
+                <option>2029</option>
+                <option>2030</option>
+            </select>
+
+            <table id="calendar-table"></table>
+        </div>
+
+        <button onclick="logout()">Cerrar Sesión</button>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

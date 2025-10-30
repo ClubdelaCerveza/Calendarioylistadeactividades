@@ -1,7 +1,9 @@
-// Gestión de usuarios
+// --------------------
+// Registro y Login
+// --------------------
 function register() {
-    const username = document.getElementById('username').value;
-    const password = document.getElementById('password').value;
+    const username = document.getElementById('username').value.trim();
+    const password = document.getElementById('password').value.trim();
 
     if(!username || !password) {
         document.getElementById('login-message').innerText = "Ingrese usuario y contraseña";
@@ -16,18 +18,20 @@ function register() {
 
     users[username] = password;
     localStorage.setItem('users', JSON.stringify(users));
-    document.getElementById('login-message').innerText = "Usuario creado. Inicie sesión.";
+    document.getElementById('login-message').style.color = "green";
+    document.getElementById('login-message').innerText = "Usuario creado correctamente. Puede iniciar sesión.";
 }
 
 function login() {
-    const username = document.getElementById('username').value;
-    const password = document.getElementById('password').value;
+    const username = document.getElementById('username').value.trim();
+    const password = document.getElementById('password').value.trim();
 
     let users = JSON.parse(localStorage.getItem('users')) || {};
-    if(users[username] === password) {
+    if(users[username] && users[username] === password) {
         localStorage.setItem('currentUser', username);
         showMain();
     } else {
+        document.getElementById('login-message').style.color = "red";
         document.getElementById('login-message').innerText = "Usuario o contraseña incorrectos";
     }
 }
@@ -38,7 +42,9 @@ function logout() {
     document.getElementById('login-container').style.display = "block";
 }
 
-// Mostrar interfaz principal
+// --------------------
+// Interfaz principal
+// --------------------
 function showMain() {
     const user = localStorage.getItem('currentUser');
     if(!user) return;
@@ -52,14 +58,16 @@ function showMain() {
     drawCalendar();
 }
 
-// Establecer mes y año actuales al cargar
-function setCurrentMonthYear() {
-    const now = new Date();
-    document.getElementById('month-select').value = now.getMonth();
-    document.getElementById('year-select').value = now.getFullYear();
+// Auto-login si ya hay usuario
+window.onload = function() {
+    if(localStorage.getItem('currentUser')) {
+        showMain();
+    }
 }
 
-// Gestión de actividades
+// --------------------
+// Actividades
+// --------------------
 function addActivity() {
     const activityInput = document.getElementById('new-activity');
     const activity = activityInput.value.trim();
@@ -68,6 +76,7 @@ function addActivity() {
     let activities = JSON.parse(localStorage.getItem('activities_' + localStorage.getItem('currentUser'))) || [];
     activities.push({activity: activity, day: null, month: null, year: null});
     localStorage.setItem('activities_' + localStorage.getItem('currentUser'), JSON.stringify(activities));
+
     activityInput.value = "";
     loadActivities();
     drawCalendar();
@@ -92,7 +101,15 @@ function deleteActivity(index) {
     drawCalendar();
 }
 
-// Calendario mejorado
+// --------------------
+// Calendario
+// --------------------
+function setCurrentMonthYear() {
+    const now = new Date();
+    document.getElementById('month-select').value = now.getMonth();
+    document.getElementById('year-select').value = now.getFullYear();
+}
+
 function drawCalendar() {
     const month = parseInt(document.getElementById('month-select').value);
     const year = parseInt(document.getElementById('year-select').value);
@@ -126,7 +143,7 @@ function drawCalendar() {
         dayDiv.innerHTML = `<strong>${day}</strong>`;
         cell.appendChild(dayDiv);
 
-        // Mostrar actividades asignadas
+        // Mostrar actividades asignadas a este día
         activities.forEach((a) => {
             if(a.day === day && a.month === month && a.year === year) {
                 const actDiv = document.createElement('div');
@@ -136,24 +153,18 @@ function drawCalendar() {
             }
         });
 
-        // Asignar actividad al día al hacer click
-        cell.onclick = function() {
-            if(activities.length === 0) {
-                alert("No hay actividades para asignar.");
-                return;
-            }
-            const actList = activities.map(a => a.activity);
-            const activityName = prompt("Seleccione actividad para este día:\n" + actList.join("\n"));
-            let selected = activities.find(a => a.activity === activityName);
-            if(selected) {
-                selected.day = day;
-                selected.month = month;
-                selected.year = year;
+        // Permitir asignar actividad al día haciendo click
+        cell.onclick = () => {
+            const activityIndex = prompt("Ingrese el índice de la actividad del listado para asignarla al día (0 para la primera):");
+            const index = parseInt(activityIndex);
+            if(isNaN(index)) return;
+            if(index >= 0 && index < activities.length) {
+                activities[index].day = day;
+                activities[index].month = month;
+                activities[index].year = year;
                 localStorage.setItem('activities_' + localStorage.getItem('currentUser'), JSON.stringify(activities));
                 drawCalendar();
             }
-        }
+        };
     }
 }
-
-showMain();

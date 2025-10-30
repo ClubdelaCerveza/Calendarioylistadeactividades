@@ -6,13 +6,13 @@ function register() {
     const password = document.getElementById('password').value.trim();
     const message = document.getElementById('login-message');
 
-    if(!username || !password) {
+    if (!username || !password) {
         message.innerText = "Ingrese usuario y contraseña";
         return;
     }
 
     let users = JSON.parse(localStorage.getItem('users')) || {};
-    if(users[username]) {
+    if (users[username]) {
         message.innerText = "Usuario ya existe";
         return;
     }
@@ -29,7 +29,7 @@ function login() {
     const message = document.getElementById('login-message');
 
     let users = JSON.parse(localStorage.getItem('users')) || {};
-    if(users[username] && users[username] === password) {
+    if (users[username] && users[username] === password) {
         localStorage.setItem('currentUser', username);
         showMain();
     } else {
@@ -49,50 +49,86 @@ function logout() {
 // --------------------
 function showMain() {
     const user = localStorage.getItem('currentUser');
-    if(!user) return;
+    if (!user) return;
 
     document.getElementById('login-container').style.display = "none";
     document.getElementById('main-container').style.display = "block";
     document.getElementById('user-display').innerText = user;
 
+    populateMonthYearSelectors();
     loadActivities();
-    setCurrentMonthYear();
     drawCalendar();
 }
 
 window.onload = function() {
-    if(localStorage.getItem('currentUser')) {
+    if (localStorage.getItem('currentUser')) {
         showMain();
+    } else {
+        populateMonthYearSelectors();
     }
+}
+
+// --------------------
+// Selector de mes y año
+// --------------------
+function populateMonthYearSelectors() {
+    const monthSelect = document.getElementById('month-select');
+    const yearSelect = document.getElementById('year-select');
+
+    const monthNames = ["Enero","Febrero","Marzo","Abril","Mayo","Junio",
+                        "Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre"];
+    monthSelect.innerHTML = "";
+    monthNames.forEach((m, i) => {
+        const option = document.createElement('option');
+        option.value = i;
+        option.text = m;
+        monthSelect.appendChild(option);
+    });
+
+    yearSelect.innerHTML = "";
+    for (let y = 2025; y <= 2030; y++) {
+        const option = document.createElement('option');
+        option.value = y;
+        option.text = y;
+        yearSelect.appendChild(option);
+    }
+
+    // Seleccionar mes actual y año actual
+    const now = new Date();
+    monthSelect.value = now.getMonth();
+    yearSelect.value = now.getFullYear();
 }
 
 // --------------------
 // Actividades con fecha
 // --------------------
 function addActivity() {
-    const activityInput = document.getElementById('new-activity');
-    const activityName = activityInput.value.trim();
-    if(!activityName) return;
+    const name = document.getElementById('new-activity').value.trim();
+    const dateValue = document.getElementById('activity-date').value;
 
-    // Pedir fecha
-    const dateStr = prompt("Ingrese fecha de la actividad (YYYY-MM-DD):");
-    if(!dateStr) return;
-    const date = new Date(dateStr);
-    if(isNaN(date)) {
+    if (!name || !dateValue) {
+        alert("Ingrese actividad y fecha");
+        return;
+    }
+
+    const date = new Date(dateValue);
+    if (isNaN(date)) {
         alert("Fecha inválida");
         return;
     }
 
     let activities = JSON.parse(localStorage.getItem('activities_' + localStorage.getItem('currentUser'))) || [];
     activities.push({
-        activity: activityName,
+        activity: name,
         day: date.getDate(),
         month: date.getMonth(),
         year: date.getFullYear()
     });
     localStorage.setItem('activities_' + localStorage.getItem('currentUser'), JSON.stringify(activities));
 
-    activityInput.value = "";
+    document.getElementById('new-activity').value = "";
+    document.getElementById('activity-date').value = "";
+
     loadActivities();
     drawCalendar();
 }
@@ -122,9 +158,9 @@ function editActivityDate(index) {
     let activities = JSON.parse(localStorage.getItem('activities_' + localStorage.getItem('currentUser'))) || [];
     const a = activities[index];
     const dateStr = prompt("Editar fecha de la actividad (YYYY-MM-DD):", `${a.year}-${a.month+1}-${a.day}`);
-    if(!dateStr) return;
+    if (!dateStr) return;
     const date = new Date(dateStr);
-    if(isNaN(date)) {
+    if (isNaN(date)) {
         alert("Fecha inválida");
         return;
     }
@@ -139,12 +175,6 @@ function editActivityDate(index) {
 // --------------------
 // Calendario
 // --------------------
-function setCurrentMonthYear() {
-    const now = new Date();
-    document.getElementById('month-select').value = now.getMonth();
-    document.getElementById('year-select').value = now.getFullYear();
-}
-
 function drawCalendar() {
     const month = parseInt(document.getElementById('month-select').value);
     const year = parseInt(document.getElementById('year-select').value);
@@ -164,12 +194,12 @@ function drawCalendar() {
     });
 
     let row = table.insertRow();
-    for(let i=0; i<firstDay; i++) row.insertCell();
+    for (let i = 0; i < firstDay; i++) row.insertCell();
 
     let activities = JSON.parse(localStorage.getItem('activities_' + localStorage.getItem('currentUser'))) || [];
 
-    for(let day=1; day<=daysInMonth; day++) {
-        if(row.cells.length === 7) row = table.insertRow();
+    for (let day = 1; day <= daysInMonth; day++) {
+        if (row.cells.length === 7) row = table.insertRow();
         let cell = row.insertCell();
         cell.style.verticalAlign = "top";
         cell.style.height = "80px";
@@ -178,9 +208,8 @@ function drawCalendar() {
         dayDiv.innerHTML = `<strong>${day}</strong>`;
         cell.appendChild(dayDiv);
 
-        // Mostrar actividades del día
-        activities.forEach((a) => {
-            if(a.day === day && a.month === month && a.year === year) {
+        activities.forEach(a => {
+            if (a.day === day && a.month === month && a.year === year) {
                 const actDiv = document.createElement('div');
                 actDiv.className = "activity-day";
                 actDiv.innerText = a.activity;

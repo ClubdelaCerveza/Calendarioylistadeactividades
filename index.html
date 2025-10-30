@@ -26,6 +26,7 @@
         <div id="activities-section">
             <h3>Listado de Actividades</h3>
             <input type="text" id="new-activity" placeholder="Nueva actividad">
+            <input type="date" id="activity-date">
             <button onclick="addActivity()">Agregar</button>
             <ul id="activity-list"></ul>
         </div>
@@ -34,30 +35,10 @@
         <div id="calendar-section">
             <h3>Calendario</h3>
             <label for="month-select">Mes:</label>
-            <select id="month-select" onchange="drawCalendar()">
-                <option value="0">Enero</option>
-                <option value="1">Febrero</option>
-                <option value="2">Marzo</option>
-                <option value="3">Abril</option>
-                <option value="4">Mayo</option>
-                <option value="5">Junio</option>
-                <option value="6">Julio</option>
-                <option value="7">Agosto</option>
-                <option value="8">Septiembre</option>
-                <option value="9">Octubre</option>
-                <option value="10">Noviembre</option>
-                <option value="11">Diciembre</option>
-            </select>
+            <select id="month-select" onchange="drawCalendar()"></select>
 
             <label for="year-select">Año:</label>
-            <select id="year-select" onchange="drawCalendar()">
-                <option>2025</option>
-                <option>2026</option>
-                <option>2027</option>
-                <option>2028</option>
-                <option>2029</option>
-                <option>2030</option>
-            </select>
+            <select id="year-select" onchange="drawCalendar()"></select>
 
             <table id="calendar-table"></table>
         </div>

@@ -13,7 +13,7 @@
   <div id="login-container" class="login-container">
     <div class="login-box">
       <h1>🍻 El Club de la Cerveza</h1>
-      <p>¡Crea tu usuario o inicia sesión para acceder a tus planes!</p>
+      <p>¡Crea tu usuario o inicia sesión para acceder al calendario y actividades!</p>
       <input type="text" id="username" placeholder="Usuario">
       <input type="password" id="password" placeholder="Contraseña">
       <button id="login-btn">Entrar / Registrarse</button>
@@ -21,38 +21,12 @@
     </div>
   </div>
 
-  <!-- AVATAR (solo visible tras login) -->
-  <div id="avatar-container" class="hidden login-container">
-    <div class="login-box">
-      <h2>¡Crea tu avatar divertido!</h2>
-      <label>Género:</label>
-      <select id="avatar-gender">
-        <option value="male">Hombre</option>
-        <option value="female">Mujer</option>
-      </select>
-      <label>Vestimenta:</label>
-      <select id="avatar-outfit">
-        <option value="casual">Casual</option>
-        <option value="fiestero">Fiestero</option>
-        <option value="deportivo">Deportivo</option>
-        <option value="formal">Formal</option>
-      </select>
-      <button id="avatar-save">Guardar Avatar</button>
-    </div>
-  </div>
-
-  <!-- MAIN (solo visible tras avatar) -->
+  <!-- MAIN (solo visible tras iniciar sesión) -->
   <div id="main-container" class="hidden main-container">
     <header>
       <h2>¡Bienvenido al Club! 🎉</h2>
       <button id="logout-btn" class="logout-btn">Cerrar sesión</button>
     </header>
-
-    <!-- USUARIOS CONECTADOS -->
-    <section id="users">
-      <h3>Usuarios Registrados</h3>
-      <ul id="user-list" class="user-list"></ul>
-    </section>
 
     <!-- ACTIVIDADES -->
     <section id="activities">

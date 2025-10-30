@@ -1,63 +1,20 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>El Club de la Cerveza</title>
-  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;700&family=Roboto&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css">
-</head>
-<body>
+<!-- ACTIVIDADES -->
+<section id="activities">
+  <h3>📅 Actividades del Grupo</h3>
+  <form id="activity-form" class="activity-form">
+    <input type="text" id="activity-name" placeholder="Nombre de la actividad" required>
 
-  <!-- LOGIN / REGISTRO -->
-  <div id="login-container" class="login-container">
-    <div class="login-box">
-      <h1>🍻 El Club de la Cerveza</h1>
-      <p>¡Crea tu usuario o inicia sesión para acceder al calendario y actividades!</p>
-      <input type="text" id="username" placeholder="Usuario">
-      <input type="password" id="password" placeholder="Contraseña">
-      <button id="login-btn">Entrar / Registrarse</button>
-      <p id="login-msg" class="login-msg"></p>
-    </div>
-  </div>
+    <select id="activity-groups" multiple required>
+      <option value="Tardeo&Bailoteo">Tardeo & Bailoteo</option>
+      <option value="Exploradores del Paladar">Exploradores del Paladar</option>
+      <option value="Rutas/Senderismo">Rutas/Senderismo</option>
+      <option value="Culturópatas ilustrados">Culturópatas ilustrados</option>
+      <option value="Planeta fit">Planeta fit</option>
+      <option value="Tranquileo Inquieto Divertido">Tranquileo Inquieto Divertido</option>
+    </select>
 
-  <!-- MAIN (solo visible tras iniciar sesión) -->
-  <div id="main-container" class="hidden main-container">
-    <header>
-      <h2>¡Bienvenido al Club! 🎉</h2>
-      <button id="logout-btn" class="logout-btn">Cerrar sesión</button>
-    </header>
-
-    <!-- ACTIVIDADES -->
-    <section id="activities">
-      <h3>📅 Actividades del Grupo</h3>
-      <form id="activity-form" class="activity-form">
-        <input type="text" id="activity-name" placeholder="Nombre de la actividad" required>
-        <select id="activity-groups" multiple required>
-          <option value="Tardeo&Bailoteo">Tardeo & Bailoteo</option>
-          <option value="Exploradores del Paladar">Exploradores del Paladar</option>
-          <option value="Rutas/Senderismo">Rutas/Senderismo</option>
-          <option value="Culturópatas ilustrados">Culturópatas ilustrados</option>
-          <option value="Planeta fit">Planeta fit</option>
-          <option value="Tranquileo Inquieto Divertido">Tranquileo Inquieto Divertido</option>
-        </select>
-        <input type="date" id="activity-date" required>
-        <button type="submit">Agregar</button>
-      </form>
-      <ul id="activity-list" class="activity-list"></ul>
-    </section>
-
-    <!-- CALENDARIO -->
-    <section id="calendar">
-      <h3>Calendario de Actividades</h3>
-      <div class="calendar-controls">
-        <select id="month-select"></select>
-        <select id="year-select"></select>
-      </div>
-      <div id="calendar-grid" class="calendar-grid"></div>
-    </section>
-  </div>
-
-  <script src="script.js"></script>
-</body>
-</html>
+    <input type="date" id="activity-date" required>
+    <button type="submit">Agregar</button>
+  </form>
+  <ul id="activity-list" class="activity-list"></ul>
+</section>

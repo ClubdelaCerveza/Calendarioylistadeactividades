@@ -1,124 +1,79 @@
-// Datos simulados
-let users = [];
-let activities = [];
-let currentUser = null;
-
-// Elementos
-const loginContainer = document.getElementById("login-container");
-const mainContainer = document.getElementById("main-container");
-const loginBtn = document.getElementById("login-btn");
-const loginMsg = document.getElementById("login-msg");
-const logoutBtn = document.getElementById("logout-btn");
 const activityForm = document.getElementById("activity-form");
 const activityList = document.getElementById("activity-list");
 const monthSelect = document.getElementById("month-select");
 const yearSelect = document.getElementById("year-select");
 const calendarGrid = document.getElementById("calendar-grid");
 
-// Inicializar meses y años (2025-2030)
-for(let m=0; m<12; m++){
-  let option = document.createElement("option");
-  option.value = m;
-  option.textContent = new Date(0,m).toLocaleString('es-ES',{month:'long'});
-  monthSelect.appendChild(option);
-}
-for(let y=2025; y<=2030; y++){
-  let option = document.createElement("option");
-  option.value = y;
-  option.textContent = y;
-  yearSelect.appendChild(option);
-}
+let activities = [];
 
-// LOGIN / REGISTRO
-loginBtn.addEventListener("click", () => {
-  const username = document.getElementById("username").value.trim();
-  const password = document.getElementById("password").value;
-  if(!username || !password){ 
-    loginMsg.textContent="Rellena todos los campos"; 
-    return; 
-  }
+// Inicializar meses y años
+const months = ["Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre"];
+for(let i=0;i<months.length;i++) monthSelect.innerHTML += `<option value="${i}">${months[i]}</option>`;
+for(let y=2025; y<=2030; y++) yearSelect.innerHTML += `<option value="${y}">${y}</option>`;
 
-  let user = users.find(u => u.username === username);
-  if(user){ 
-    if(user.password === password){ 
-      currentUser = user;
-      loginContainer.classList.add("hidden");
-      mainContainer.classList.remove("hidden");
-      renderActivities();
-      renderCalendar();
-    } else {
-      loginMsg.textContent = "Contraseña incorrecta";
-    }
-  } else {
-    currentUser = {username,password};
-    users.push(currentUser);
-    loginContainer.classList.add("hidden");
-    mainContainer.classList.remove("hidden");
-    renderActivities();
-    renderCalendar();
-  }
-});
-
-// CERRAR SESIÓN
-logoutBtn.addEventListener("click", () => {
-  currentUser = null;
-  mainContainer.classList.add("hidden");
-  loginContainer.classList.remove("hidden");
-});
-
-// ACTIVIDADES
+// Función para agregar actividad
 activityForm.addEventListener("submit", (e) => {
   e.preventDefault();
-  if(!currentUser) return; // Solo usuarios registrados
-  let name = document.getElementById("activity-name").value;
-  let groups = Array.from(document.getElementById("activity-groups").selectedOptions).map(o => o.value);
-  let date = document.getElementById("activity-date").value;
-  activities.push({name,groups,date});
-  renderActivities();
-  renderCalendar();
-  activityForm.reset();
+  const name = document.getElementById("activity-name").value;
+  const date = document.getElementById("activity-date").value;
+  const groups = Array.from(document.getElementById("activity-groups").selectedOptions).map(opt => opt.value);
+
+  if(name && date && groups.length){
+    const activity = { name, date, groups };
+    activities.push(activity);
+    renderActivities();
+    renderCalendar();
+    activityForm.reset();
+  }
 });
 
+// Renderizado de actividades
 function renderActivities(){
-  activityList.innerHTML="";
-  activities.forEach(a => {
-    let li = document.createElement("li");
-    li.textContent = `${a.name} - ${a.date} - ${a.groups.join(", ")}`;
+  activityList.innerHTML = "";
+  activities.sort((a,b)=> new Date(a.date)-new Date(b.date));
+  activities.forEach(act => {
+    const li = document.createElement("li");
+    li.textContent = `${act.date}: ${act.name} (${act.groups.join(", ")})`;
+    li.dataset.groups = act.groups.join(",");
     activityList.appendChild(li);
   });
 }
 
-// CALENDARIO
+// Renderizado calendario
 function renderCalendar(){
-  if(!currentUser) return; // Solo usuarios registrados
-  let month = parseInt(monthSelect.value);
-  let year = parseInt(yearSelect.value);
-  calendarGrid.innerHTML="";
-  let firstDay = new Date(year, month, 1).getDay();
-  let daysInMonth = new Date(year, month+1, 0).getDate();
-  let startDay = (firstDay+6)%7;
+  const month = parseInt(monthSelect.value);
+  const year = parseInt(yearSelect.value);
+  const firstDay = new Date(year, month, 1).getDay();
+  const daysInMonth = new Date(year, month+1, 0).getDate();
 
-  for(let i=0; i<startDay; i++){ calendarGrid.appendChild(document.createElement("div")); }
+  calendarGrid.innerHTML = "";
+  for(let i=0;i<firstDay;i++) calendarGrid.innerHTML += `<div class="day empty"></div>`;
 
   for(let d=1; d<=daysInMonth; d++){
-    let dayDiv = document.createElement("div");
+    const dayDiv = document.createElement("div");
     dayDiv.className = "day";
-    let span = document.createElement("span");
-    span.textContent = d;
-    dayDiv.appendChild(span);
-    let dateStr = `${year}-${String(month+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
-    activities.filter(a => a.date===dateStr).forEach(a => {
-      a.groups.forEach(g => {
-        let ev = document.createElement("span");
-        ev.textContent = a.name;
-        ev.dataset.group = g;
+    dayDiv.innerHTML = `<span>${d}</span>`;
+
+    const currentDate = `${year}-${String(month+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+    activities.filter(a => a.date===currentDate).forEach(act => {
+      act.groups.forEach(group => {
+        const ev = document.createElement("div");
         ev.className = "event";
+        ev.dataset.group = group;
+        ev.textContent = act.name;
         dayDiv.appendChild(ev);
       });
     });
+
     calendarGrid.appendChild(dayDiv);
   }
 }
 
+// Actualizar calendario al cambiar mes/año
 monthSelect.addEventListener("change", renderCalendar);
 yearSelect.addEventListener("change", renderCalendar);
+
+// Inicializar calendario
+monthSelect.value = new Date().getMonth();
+yearSelect.value = new Date().getFullYear();
+renderCalendar();

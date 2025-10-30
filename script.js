@@ -4,35 +4,37 @@
 function register() {
     const username = document.getElementById('username').value.trim();
     const password = document.getElementById('password').value.trim();
+    const message = document.getElementById('login-message');
 
     if(!username || !password) {
-        document.getElementById('login-message').innerText = "Ingrese usuario y contraseña";
+        message.innerText = "Ingrese usuario y contraseña";
         return;
     }
 
     let users = JSON.parse(localStorage.getItem('users')) || {};
     if(users[username]) {
-        document.getElementById('login-message').innerText = "Usuario ya existe";
+        message.innerText = "Usuario ya existe";
         return;
     }
 
     users[username] = password;
     localStorage.setItem('users', JSON.stringify(users));
-    document.getElementById('login-message').style.color = "green";
-    document.getElementById('login-message').innerText = "Usuario creado correctamente. Puede iniciar sesión.";
+    message.style.color = "green";
+    message.innerText = "Usuario creado correctamente. Ahora inicia sesión.";
 }
 
 function login() {
     const username = document.getElementById('username').value.trim();
     const password = document.getElementById('password').value.trim();
+    const message = document.getElementById('login-message');
 
     let users = JSON.parse(localStorage.getItem('users')) || {};
     if(users[username] && users[username] === password) {
         localStorage.setItem('currentUser', username);
         showMain();
     } else {
-        document.getElementById('login-message').style.color = "red";
-        document.getElementById('login-message').innerText = "Usuario o contraseña incorrectos";
+        message.style.color = "red";
+        message.innerText = "Usuario o contraseña incorrectos";
     }
 }
 
@@ -155,13 +157,13 @@ function drawCalendar() {
 
         // Permitir asignar actividad al día haciendo click
         cell.onclick = () => {
-            const activityIndex = prompt("Ingrese el índice de la actividad del listado para asignarla al día (0 para la primera):");
-            const index = parseInt(activityIndex);
-            if(isNaN(index)) return;
-            if(index >= 0 && index < activities.length) {
-                activities[index].day = day;
-                activities[index].month = month;
-                activities[index].year = year;
+            const index = prompt("Ingrese el índice de la actividad del listado para asignarla al día (0 para la primera):");
+            const i = parseInt(index);
+            if(isNaN(i)) return;
+            if(i >= 0 && i < activities.length) {
+                activities[i].day = day;
+                activities[i].month = month;
+                activities[i].year = year;
                 localStorage.setItem('activities_' + localStorage.getItem('currentUser'), JSON.stringify(activities));
                 drawCalendar();
             }

@@ -9,11 +9,11 @@
 </head>
 <body>
 
-  <!-- LOGIN -->
+  <!-- LOGIN / REGISTRO -->
   <div id="login-container" class="login-container">
     <div class="login-box">
       <h1>🍻 El Club de la Cerveza</h1>
-      <p>¡Organiza planes divertidos con tus amigos!</p>
+      <p>¡Crea tu usuario o inicia sesión para acceder a tus planes!</p>
       <input type="text" id="username" placeholder="Usuario" />
       <input type="password" id="password" placeholder="Contraseña" />
       <button id="login-btn">Entrar / Registrarse</button>
@@ -41,7 +41,7 @@
     </div>
   </div>
 
-  <!-- MAIN -->
+  <!-- MAIN (solo visible tras iniciar sesión) -->
   <div id="main-container" class="hidden main-container">
 
     <header>
@@ -53,29 +53,6 @@
     <section id="users">
       <h3>Usuarios Registrados</h3>
       <ul id="user-list" class="user-list"></ul>
-    </section>
-
-    <!-- GALERÍA DE PLANES -->
-    <section id="gallery">
-      <h3>Planes y Diversión</h3>
-      <div class="image-grid">
-        <div class="card">
-          <img src="https://images.unsplash.com/photo-1501594907352-04cda38ebc29" alt="Cerveza">
-          <div class="card-text">Cerveza Artesanal</div>
-        </div>
-        <div class="card">
-          <img src="https://images.unsplash.com/photo-1603052875396-0287a9f0b9c9" alt="Comida">
-          <div class="card-text">Tapas y Comida</div>
-        </div>
-        <div class="card">
-          <img src="https://images.unsplash.com/photo-1527169402691-a3b7c8eae5f8" alt="Ruta">
-          <div class="card-text">Rutas Cerveceras</div>
-        </div>
-        <div class="card">
-          <img src="https://images.unsplash.com/photo-1595273670756-6b1a7b8aeb93" alt="Amigos">
-          <div class="card-text">Planes con Amigos</div>
-        </div>
-      </div>
     </section>
 
     <!-- ACTIVIDADES -->

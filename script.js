@@ -1,45 +1,60 @@
-// Datos (en memoria)
+// Datos simulados
 let users = [];
-let currentUser = null;
 let activities = [];
+let currentUser = null;
 
-// DOM
-const loginBtn = document.getElementById("login-btn");
-const loginMsg = document.getElementById("login-msg");
+// Elementos
 const loginContainer = document.getElementById("login-container");
 const avatarContainer = document.getElementById("avatar-container");
 const mainContainer = document.getElementById("main-container");
+const loginBtn = document.getElementById("login-btn");
+const loginMsg = document.getElementById("login-msg");
 const logoutBtn = document.getElementById("logout-btn");
-const userListElem = document.getElementById("user-list");
 const avatarSaveBtn = document.getElementById("avatar-save");
+const userListElem = document.getElementById("user-list");
 const activityForm = document.getElementById("activity-form");
 const activityList = document.getElementById("activity-list");
 const monthSelect = document.getElementById("month-select");
 const yearSelect = document.getElementById("year-select");
 const calendarGrid = document.getElementById("calendar-grid");
 
-// Inicializar meses y años
-const months = ["Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre"];
-months.forEach((m,i)=> { let opt = document.createElement("option"); opt.value=i; opt.textContent=m; monthSelect.appendChild(opt); });
-for(let y=2025;y<=2030;y++){ let opt=document.createElement("option"); opt.value=y; opt.textContent=y; yearSelect.appendChild(opt); }
+// Inicializar mes/año del calendario
+for(let m=0;m<12;m++){
+  let option=document.createElement("option");
+  option.value=m;
+  option.textContent=new Date(0,m).toLocaleString('es-ES',{month:'long'});
+  monthSelect.appendChild(option);
+}
+for(let y=2025;y<=2030;y++){
+  let option=document.createElement("option");
+  option.value=y;
+  option.textContent=y;
+  yearSelect.appendChild(option);
+}
 
-// Login/Registro
+// LOGIN / REGISTRO
 loginBtn.addEventListener("click", () => {
   const username = document.getElementById("username").value.trim();
   const password = document.getElementById("password").value;
   if(!username || !password){ loginMsg.textContent="Rellena todos los campos"; return; }
   let user = users.find(u=>u.username===username);
   if(user){ 
-    if(user.password===password){ currentUser=user; loginContainer.classList.add("hidden"); avatarContainer.classList.remove("hidden"); }
+    if(user.password===password){ 
+      currentUser=user; 
+      currentUser.status="online";
+      loginContainer.classList.add("hidden"); 
+      avatarContainer.classList.remove("hidden"); 
+    }
     else loginMsg.textContent="Contraseña incorrecta";
   } else {
     currentUser={username,password,avatar:null,status:"online"};
     users.push(currentUser);
-    loginContainer.classList.add("hidden"); avatarContainer.classList.remove("hidden");
+    loginContainer.classList.add("hidden"); 
+    avatarContainer.classList.remove("hidden");
   }
 });
 
-// Guardar avatar
+// AVATAR
 avatarSaveBtn.addEventListener("click", () => {
   const gender = document.getElementById("avatar-gender").value;
   const outfit = document.getElementById("avatar-outfit").value;
@@ -51,7 +66,7 @@ avatarSaveBtn.addEventListener("click", () => {
   renderCalendar();
 });
 
-// Cerrar sesión
+// CERRAR SESIÓN
 logoutBtn.addEventListener("click", () => {
   currentUser.status="offline";
   currentUser=null;
@@ -59,13 +74,11 @@ logoutBtn.addEventListener("click", () => {
   loginContainer.classList.remove("hidden");
 });
 
-// Render usuarios
+// RENDER USUARIOS
 function renderUsers(){
   userListElem.innerHTML="";
   users.forEach(u=>{
     let li = document.createElement("li");
-    let img = document.createElement("img");
-    img.src="https://via.placeholder.com/40";
     let status = document.createElement("span");
     status.className="status "+(u.status==="online"?"online":"offline");
     li.textContent = u.username+" ";
@@ -74,9 +87,10 @@ function renderUsers(){
   });
 }
 
-// Actividades
+// ACTIVIDADES
 activityForm.addEventListener("submit",(e)=>{
   e.preventDefault();
+  if(!currentUser) return;
   let name = document.getElementById("activity-name").value;
   let groups = Array.from(document.getElementById("activity-groups").selectedOptions).map(o=>o.value);
   let date = document.getElementById("activity-date").value;
@@ -95,18 +109,17 @@ function renderActivities(){
   });
 }
 
-// Calendario
+// CALENDARIO
 function renderCalendar(){
+  if(!currentUser) return;
   let month=parseInt(monthSelect.value);
   let year=parseInt(yearSelect.value);
   calendarGrid.innerHTML="";
   let firstDay=new Date(year,month,1).getDay();
   let daysInMonth=new Date(year,month+1,0).getDate();
-
-  // Ajuste para que lunes sea 0
   let startDay = (firstDay+6)%7;
 
-  for(let i=0;i<startDay;i++){ let d=document.createElement("div"); calendarGrid.appendChild(d); }
+  for(let i=0;i<startDay;i++){ calendarGrid.appendChild(document.createElement("div")); }
 
   for(let d=1;d<=daysInMonth;d++){
     let dayDiv=document.createElement("div");
@@ -128,6 +141,5 @@ function renderCalendar(){
   }
 }
 
-// Cambios calendario
 monthSelect.addEventListener("change", renderCalendar);
 yearSelect.addEventListener("change", renderCalendar);
